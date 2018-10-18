@@ -1,5 +1,5 @@
 //
-const element = document.getElementById('wrapper');
+// const element = document.getElementById('wrapper');
 
 
 // Add arrays with word lists
@@ -15,17 +15,31 @@ var status = 'initial';
 var mode = 'group'; //group or individual
 var nPlayers = null;
 var remainingTotal = 10; 
+var elements = {
+    body: document.querySelector('body'),
+    wrapper: document.getElementById('wrapper'),
+    player0: document.getElementById('boxP0'),
+};
 
 var app = {
     hide: (key) => {
         let selectedElement = document.querySelector('.title');
         selectedElement.classList.add('hide');
 
+        for (let i = 0; i < 4; i++) {
+            selectedElement = document.getElementById(1+i)
+            selectedElement.innerHTML = '';
+        }
+        
+       
+
+
     },
     createPlayer: (key) => {
         for (let i = 0; i < key; i++) {
             player[i] = new playerBuider(i);
         }
+        build.divPlayer(key);
         status = 'started';
     },
     setCategories: () => {
@@ -190,95 +204,131 @@ var app = {
 
 var build = {
     //create the basic template for 4 players
-    divPlayer: (key) => {
-        for (let i = 0; i < key; i++) {
-            let newElement = document.createElement('div');
-            newElement.classList.add('box', 'p' + i);
+    background: () => {
+        for (let i = 0; i < 4; i++) {
+            let newElement = document.createElement('button');
+            newElement.classList.add('boxP' + i);
+            newElement.id = (i + 1);
 
             let divWrapper = document.createElement('div');
-            divWrapper.classList.add('inner-wrapper');
+            divWrapper.classList.add('inner-wrapper','selector');
+            if ((i + 1)=== 1) {
+                divWrapper.innerHTML = (i + 1) + ' Player'
+            } else {
+                divWrapper.innerHTML = (i + 1) + ' Players'
+            }
+             //+ (i===1)?' Player':;
             newElement.append(divWrapper);
 
-            let divTop = document.createElement('div');
-            divTop.classList.add('top-p' + i);
-            divTop.innerHTML = (i + 1) + ' Player';
+            
 
-            divWrapper.append(divTop);
-
-            //Create the element displays the template of the selected word
-            let divMid1 = document.createElement('div');
-            divMid1.classList.add('middle-p' + i, 'template');
-            divWrapper.append(divMid1);
-
-            //Create the element that shows the label for the list of guessed letters
-            let guessedList = document.createElement('div');
-            guessedList.classList.add('middle-p' + i);
-            guessedList.innerHTML = 'Guessed Letters:'
-            divWrapper.append(guessedList);
-
-            //Create the element that shows list of guessed letters
-            let guessedListSpan = document.createElement('span');
-            guessedListSpan.classList.add('middle-p' + i, 'guessed-list');
-            guessedListSpan.innerHTML = ''
-            guessedList.append(guessedListSpan);
-
-            //Create the element that shows the number of right guesses
-            let divRight = document.createElement('div');
-            divRight.classList.add('ScoreP' + i,'label');
-            divRight.innerHTML = 'Right Guesses: ';
-            divWrapper.append(divRight);
-
-            let divRightSpan = document.createElement('span');
-            divRightSpan.classList.add('ScoreP' + i, 'right');
-            divRight.append(divRightSpan);
-
-            //Create the element that shows the number of wrong guesses
-            let divWrong = document.createElement('div');
-            divWrong.classList.add('ScoreP' + i,'label');
-            divWrong.innerHTML = 'Wrong Guesses: ';
-            divWrapper.append(divWrong);
-
-            let divWrongSpan = document.createElement('span');
-            divWrongSpan.classList.add('ScoreP' + i, 'wrong');
-            divWrong.append(divWrongSpan);
-
-            //Create the element that shows the number of total guesses
-            let divTotal = document.createElement('div');
-            divTotal.classList.add('ScoreP' + i,'label');
-            divTotal.innerHTML = 'Total Guesses: ';
-            divWrapper.append(divTotal);
-
-            let divTotalSpan = document.createElement('span');
-            divTotalSpan.classList.add('ScoreP' + i, 'total');
-           
-            divTotal.append(divTotalSpan);
-
-            //Create the element that shows the number of remaining guesses
-            let divRemaining = document.createElement('div');
-            divRemaining.classList.add('ScoreP' + i,'label');
-            divRemaining.innerHTML = 'Remaining Guesses: ';
-            divWrapper.append(divRemaining);
-
-            let divRemainingSpan = document.createElement('span');
-            divRemainingSpan.classList.add('ScoreP' + i, 'remaining');
-            // divRemainingSpan.innerHTML = p;
-            divRemaining.append(divRemainingSpan);
-
-            let divBottom = document.createElement('div');
-            divBottom.classList.add('bottom-p' + i);
-
-            divWrapper.append(divBottom);
-
-            element.append(newElement);
+            elements.wrapper.append(newElement);
         }
     },
+
+    divPlayer: (key) => {
+        for (let i = 0; i < key; i++) {
+            let div = document.getElementById('boxP' + i);
+
+
+
+
+
+
+
+
+
+
+
+            // let newElement = document.createElement('div');
+            // newElement.classList.add('box', 'p' + i);
+
+            // let divWrapper = document.createElement('div');
+            // divWrapper.classList.add('inner-wrapper');
+            // newElement.append(divWrapper);
+
+            // let divTop = document.createElement('div');
+            // divTop.classList.add('top-p' + i);
+            // divTop.innerHTML = (i + 1) + ' Player';
+
+            // divWrapper.append(divTop);
+
+            // //Create the element displays the template of the selected word
+            // let divMid1 = document.createElement('div');
+            // divMid1.classList.add('middle-p' + i, 'template');
+            // divWrapper.append(divMid1);
+
+            // //Create the element that shows the label for the list of guessed letters
+            // let guessedList = document.createElement('div');
+            // guessedList.classList.add('middle-p' + i);
+            // guessedList.innerHTML = 'Guessed Letters:'
+            // divWrapper.append(guessedList);
+
+            // //Create the element that shows list of guessed letters
+            // let guessedListSpan = document.createElement('span');
+            // guessedListSpan.classList.add('middle-p' + i, 'guessed-list');
+            // guessedListSpan.innerHTML = ''
+            // guessedList.append(guessedListSpan);
+
+            // //Create the element that shows the number of right guesses
+            // let divRight = document.createElement('div');
+            // divRight.classList.add('ScoreP' + i,'label');
+            // divRight.innerHTML = 'Right Guesses: ';
+            // divWrapper.append(divRight);
+
+            // let divRightSpan = document.createElement('span');
+            // divRightSpan.classList.add('ScoreP' + i, 'right');
+            // divRight.append(divRightSpan);
+
+            // //Create the element that shows the number of wrong guesses
+            // let divWrong = document.createElement('div');
+            // divWrong.classList.add('ScoreP' + i,'label');
+            // divWrong.innerHTML = 'Wrong Guesses: ';
+            // divWrapper.append(divWrong);
+
+            // let divWrongSpan = document.createElement('span');
+            // divWrongSpan.classList.add('ScoreP' + i, 'wrong');
+            // divWrong.append(divWrongSpan);
+
+            // //Create the element that shows the number of total guesses
+            // let divTotal = document.createElement('div');
+            // divTotal.classList.add('ScoreP' + i,'label');
+            // divTotal.innerHTML = 'Total Guesses: ';
+            // divWrapper.append(divTotal);
+
+            // let divTotalSpan = document.createElement('span');
+            // divTotalSpan.classList.add('ScoreP' + i, 'total');
+           
+            // divTotal.append(divTotalSpan);
+
+            // //Create the element that shows the number of remaining guesses
+            // let divRemaining = document.createElement('div');
+            // divRemaining.classList.add('ScoreP' + i,'label');
+            // divRemaining.innerHTML = 'Remaining Guesses: ';
+            // divWrapper.append(divRemaining);
+
+            // let divRemainingSpan = document.createElement('span');
+            // divRemainingSpan.classList.add('ScoreP' + i, 'remaining');
+            // // divRemainingSpan.innerHTML = p;
+            // divRemaining.append(divRemainingSpan);
+
+            // let divBottom = document.createElement('div');
+            // divBottom.classList.add('bottom-p' + i);
+
+            // divWrapper.append(divBottom);
+
+            // elements.wrapper.append(newElement);
+        }
+    },
+
+
     divTitle: () => {
         let newElement = document.createElement('div');
         newElement.classList.add('title');
-        newElement.innerHTML = '<h1>Word Guess Game</h1>' +
+        newElement.innerHTML = '<h1>Wo_d Gu_ss G_me</h1>' +
             '<p>Select the number of players</p>';
 
-        element.append(newElement)
+        elements.wrapper.append(newElement)
     },
     blankTemplate: (key) => {
         for (let i = 0; i < key; i++) {
@@ -322,51 +372,72 @@ function playerBuider(n) {
 
 }
 
+function clickSelect() {
+    n = this.id * 1;
+    // console.log((n) + typeof(n));
+    selectPlayers(n);
+    // selectPlayersKey(n);
+}
+
+function typingSelect() {
+    var key = event.key.toUpperCase();
+    if (status === 'initial') {
+        if (key >= 1 && key <= 4) {
+            selectPlayers(key);
+            
+        }
+    } else {
+        if (app.validateInput(key) === true) {
+
+            console.log('other');
+        };
+    }
+}
 
 
+function selectPlayers(key) {
+            console.log('player '+key);
+            app.hide(key);
+            app.createPlayer(key);
+            // app.setCategories();
+            // app.setRandomStart(key);
+            // build.blankTemplate(key);
+            // nPlayers = key;
 
+            // console.log(status);
+        // }
+    // } else {
+    //     if (app.validateInput(key) === true) {
+    //         // app.addGuessList(key, playerTurn);
+    //         // app.getTemplate(playerTurn);
+    //         // app.getList(playerTurn);
+    //         if (playerTurn === (nPlayers - 1)) {
+    //             playerTurn = 0;
+    //         } else {
+    //             playerTurn++;
+    //         }
+    //     };
+    // }
+}
 
 
 
 // Listerners
-const keyPressed = document.querySelector('body');
-const initial = document.getElementById('initial');
+// var elements.keyPressed = document.querySelector('body');
+// const initial = document.getElementById('initial');
+// const player1 = 
 
-build.divPlayer(4);
+
+build.background();
+// build.divPlayer(4);
 build.divTitle();
 
-keyPressed.addEventListener('keyup', function (event) {
+document.getElementById('1').addEventListener('click', clickSelect);
+document.getElementById('2').addEventListener('click', clickSelect);
+document.getElementById('3').addEventListener('click', clickSelect);
+document.getElementById('4').addEventListener('click', clickSelect);
 
 
 
+elements.body.addEventListener('keyup', typingSelect, false); 
 
-    var key = event.key.toUpperCase();
-    if (status === 'initial') {
-        if (key >= 1 && key <= 4) {
-            app.hide(key);
-            app.createPlayer(key);
-            app.setCategories();
-            app.setRandomStart(key);
-            build.blankTemplate(key);
-            nPlayers = key;
-
-            // console.log(status);
-
-        }
-    } else {
-        if (app.validateInput(key) === true) {
-            app.addGuessList(key, playerTurn);
-
-            app.getTemplate(playerTurn);
-            app.getList(playerTurn);
-
-
-            if (playerTurn === (nPlayers - 1)) {
-                playerTurn = 0;
-            } else {
-                playerTurn++;
-            }
-
-        };
-    }
-})

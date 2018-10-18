@@ -1,22 +1,37 @@
-.box.p0  {background-color: #03A9F4}
-.box.p1   {background-color: #FF5722}
-.box.p2  {background-color: #8BC34A}
-.box.p3   {background-color: orange}
-
-
-
-
-.title{
-    /* font-family: 'Bungee Shade', cursive; */
-    font-size: 2.5em;
-    width: auto;
-
-
+body {
+    margin: 40px;
 }
 
-.title > p {
-    color:black;
-    font-size: 16px;
+/* Set the background colors */
+.boxP0 {
+    background-color: #03A9F4
+}
+
+.boxP1 {
+    background-color: #FF5722
+}
+
+.boxP2 {
+    background-color: #8BC34A
+}
+
+.boxP3 {
+    background-color: orange
+}
+
+
+
+
+.title {
+    /* font-family: 'Bungee Shade', cursive; */
+    font-size: 3rem;
+    padding-top: 1rem;
+    /* width: auto; */
+}
+
+.title>p {
+    color: black;
+    font-size: 1.6rem;
 }
 
 .hide {
@@ -27,6 +42,129 @@
     letter-spacing: 10px;
 }
 
-.middle-p0, .middle-p1, .middle-p2, .middle-p3  {
+.middle-p0,
+.middle-p1,
+.middle-p2,
+.middle-p3 {
     font-size: 14px;
+}
+
+
+/* 
+Background Grid Layout
+*/
+
+.wrapper {
+    display: grid;
+    /* grid-gap: 10px; */
+    grid-template-columns: repeat(12, [col] 8.33%);
+    grid-template-rows: repeat(10, [row] 10%);
+    background-color: gray;
+    color: #444;
+    height: 100%;
+}
+
+.boxP0, .boxP1, .boxP2 ,.boxP3 {
+    color: #fff;
+    /* border-radius: 5px; */
+    /* padding: 20px; */
+    font-size: 150%;
+    height: 100%;
+    z-index: 10;
+    display: grid;
+    grid-auto-rows: auto; 
+
+    align-content: center;
+    text-align: center;
+
+}
+
+.inner-wrapper.selector{
+    font-size: 3vw;
+}
+
+/* Positioning of the four players containers */
+
+.boxP0 {
+    grid-column: col / span 6;
+    grid-row: row / span 5;
+}
+
+.boxP1 {
+    grid-column: col 7 / span 6;
+    grid-row: row /span 5;
+}
+
+.boxP2 {
+    grid-column: col / span 6;
+    grid-row: row 6 / span 5;
+}
+
+.boxP3 {
+    grid-column: col 7 / span 6;
+    grid-row: row 6 / span 5;
+}
+
+/* .p1, .p2, .p3, .p4 {
+    /* border: white 1px solid; */
+
+
+.title {
+    grid-column: col 4/ span 6;
+    grid-row: row 5 / span 2;
+    background-color: rgb(206, 204, 204);
+    z-index: 20;
+    border: 5px white solid;
+    text-align: center;
+}
+
+/* 
+Layer 2 - inner layouts for players'container
+*/
+
+.inner-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+.upperrow1 {
+    height: 30%;
+    /* background-color: red; */
+}
+
+.upperrow2 {
+    height: 50%;
+    /* background-color: yellow; */
+    border: 1px solid black;
+    text-align: center;
+}
+
+.upperrow3 {
+    height: 20%;
+    /* background-color: black; */
+}
+
+.bottomrow1 {
+    height: 20%;
+    /* background-color: red; */
+}
+
+.bottomrow2 {
+    height: 50%;
+    /* background-color: yellow; */
+    border: 1px solid black;
+    text-align: center;
+}
+
+.bottomrow3 {
+    height: 30%;
+    /* background-color: black; */
+}
+
+.f {
+    grid-column: col 5 / span 2;
+    grid-row: row 3;
+    background-color: rgba(49, 121, 207, 0.5);
+    z-index: 20;
 }
