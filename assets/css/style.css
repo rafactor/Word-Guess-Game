@@ -1,0 +1,32 @@
+.box.p0  {background-color: #03A9F4}
+.box.p1   {background-color: #FF5722}
+.box.p2  {background-color: #8BC34A}
+.box.p3   {background-color: orange}
+
+
+
+
+.title{
+    /* font-family: 'Bungee Shade', cursive; */
+    font-size: 2.5em;
+    width: auto;
+
+
+}
+
+.title > p {
+    color:black;
+    font-size: 16px;
+}
+
+.hide {
+    display: none;
+}
+
+.template {
+    letter-spacing: 10px;
+}
+
+.middle-p0, .middle-p1, .middle-p2, .middle-p3  {
+    font-size: 14px;
+}
