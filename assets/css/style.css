@@ -2,25 +2,22 @@ body {
     margin: 40px;
 }
 
-/* Set the background colors */
+/************************************
+ FIRST SCREEN - PLAYER SELECTOR 
+ ************************************/
+
 .boxP0 {
-    background-color: #03A9F4
+    border-bottom: 1px white solid;
+    border-right: 1px white solid;
 }
 
 .boxP1 {
-    background-color: #FF5722
+    border-bottom: 1px white solid;
 }
 
 .boxP2 {
-    background-color: #8BC34A
+    border-right: 1px white solid;
 }
-
-.boxP3 {
-    background-color: orange
-}
-
-
-
 
 .title {
     /* font-family: 'Bungee Shade', cursive; */
@@ -41,43 +38,80 @@ body {
 .template {
     letter-spacing: 10px;
 }
+.boxP0, .boxP1, .boxP2 ,.boxP3 {
+    color: #fff;
+    /* border-radius: 5px; */
+    /* padding: 20px; */
+    /* font-size: 150%;
+    height: 100%; */
+    z-index: 0;
+    display: grid;
+    grid-template-columns: repeat(5, [col] 10vw);
+    grid-template-rows: repeat(5, [row] 10vh);
 
-.middle-p0,
-.middle-p1,
-.middle-p2,
-.middle-p3 {
-    font-size: 14px;
+    align-content: center;
+    text-align: center;
+
 }
 
 
-/* 
-Background Grid Layout
-*/
+.boxP0, .btnP0 {
+    grid-column: col / span 5;
+    grid-row: row / span 5;
+    background-color: #03A9F4
+}
+
+.boxP1, .btnP1 {
+    grid-column: col 6 / span 5;
+    grid-row: row / span 5;
+    background-color: #FF5722
+}
+
+.boxP2, .btnP2 {
+    grid-column: col / span 5;
+    grid-row: row 6 / span 5;
+    background-color: #8BC34A
+}
+
+.boxP3, .btnP3 {
+    grid-column:  col 6 / span 5;
+    grid-row: row 6 / span 5;
+    background-color: orange
+}
+
+.title {
+    grid-column: col 3 / span 6;
+    grid-row: row 5 / span 2 ;
+    background-color: rgb(206, 204, 204);
+    z-index: 20;
+    border: 5px white solid;
+    text-align: center;
+}
+.off {
+    background-color: grey;
+}
+.gameOver {
+    background-color: black;
+    align-content: center;
+    text-align: center;
+
+}
+
+/************************************
+ BACKGROUND & LAYOUT
+ ************************************/
 
 .wrapper {
     display: grid;
     /* grid-gap: 10px; */
-    grid-template-columns: repeat(12, [col] 8.33%);
+    grid-template-columns: repeat(10, [col] 10%);
     grid-template-rows: repeat(10, [row] 10%);
     background-color: gray;
     color: #444;
     height: 100%;
 }
 
-.boxP0, .boxP1, .boxP2 ,.boxP3 {
-    color: #fff;
-    /* border-radius: 5px; */
-    /* padding: 20px; */
-    font-size: 150%;
-    height: 100%;
-    z-index: 10;
-    display: grid;
-    grid-auto-rows: auto; 
 
-    align-content: center;
-    text-align: center;
-
-}
 
 .inner-wrapper.selector{
     font-size: 3vw;
@@ -85,86 +119,63 @@ Background Grid Layout
 
 /* Positioning of the four players containers */
 
-.boxP0 {
-    grid-column: col / span 6;
-    grid-row: row / span 5;
-}
-
-.boxP1 {
-    grid-column: col 7 / span 6;
-    grid-row: row /span 5;
-}
-
-.boxP2 {
-    grid-column: col / span 6;
-    grid-row: row 6 / span 5;
-}
-
-.boxP3 {
-    grid-column: col 7 / span 6;
-    grid-row: row 6 / span 5;
-}
-
-/* .p1, .p2, .p3, .p4 {
-    /* border: white 1px solid; */
-
-
-.title {
-    grid-column: col 4/ span 6;
-    grid-row: row 5 / span 2;
-    background-color: rgb(206, 204, 204);
-    z-index: 20;
-    border: 5px white solid;
-    text-align: center;
-}
 
 /* 
-Layer 2 - inner layouts for players'container
+Layer Position inside the player container
 */
 
-.inner-wrapper {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
+
+
+.avatar {
+    height: 100px;
+    width: 100px;
+    background-color: gray;
+    border-bottom-right-radius: 50px;
+    
 }
 
-.upperrow1 {
-    height: 30%;
-    /* background-color: red; */
+.right {
+    grid-row: row 5;
+    grid-column: col;
+    font-size: 16px;
 }
-
-.upperrow2 {
-    height: 50%;
-    /* background-color: yellow; */
-    border: 1px solid black;
-    text-align: center;
+.wrong {
+    grid-row: row 5;
+    grid-column: col 2;
+    font-size: 16px;
 }
-
-.upperrow3 {
-    height: 20%;
-    /* background-color: black; */
+.remaining {
+    grid-row: row 5;
+    grid-column: col 3;
+    font-size: 16px;
 }
-
-.bottomrow1 {
-    height: 20%;
-    /* background-color: red; */
+.wins {
+    grid-row: row 5;
+    grid-column: col 4;
+    font-size: 16px;
 }
-
-.bottomrow2 {
-    height: 50%;
-    /* background-color: yellow; */
-    border: 1px solid black;
-    text-align: center;
+.points {
+    grid-row: row 5;
+    grid-column: col 5;
+    font-size: 16px;
 }
-
-.bottomrow3 {
-    height: 30%;
-    /* background-color: black; */
+.list{
+    grid-row: row 4;
+    grid-column: col 2 / span 3;
+    font-size: 16px;
+    /* background-color: white; */
+    /* color: black; */
+    /* border-radius: 30px;
+    margin: 5px 20px 0px 50px; */
 }
-
-.f {
-    grid-column: col 5 / span 2;
+.score {
+    font-size: 1.5rem;
+}
+.label{
+    font-size: 0.8rem;
+}
+.template {
     grid-row: row 3;
-    background-color: rgba(49, 121, 207, 0.5);
-    z-index: 20;
+    grid-column: col 1 / span 5;
+    font-size: 2rem;
 }

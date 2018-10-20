@@ -1,7 +1,3 @@
-//
-// const element = document.getElementById('wrapper');
-
-
 // Add arrays with word lists
 var wordList = new Array();
 wordList[0] = new Array('animals', 'alligator', 'ant', 'bear', 'bee', 'bird', 'camel', 'cat', 'cheetah', 'chicken', 'chimpanzee', 'cow', 'crocodile', 'deer', 'dog', 'dolphin', 'duck', 'eagle', 'elephant', 'fish', 'fly', 'fox', 'frog', 'giraffe', 'goat', 'goldfish', 'hamster', 'hippopotamus', 'horse', 'kangaroo', 'kitten', 'leopard', 'lion', 'lizard', 'lobster', 'monkey', 'octopus', 'ostrich', 'otter', 'owl', 'oyster', 'panda', 'parrot', 'pelican', 'pig', 'pigeon', 'porcupine', 'puppy', 'rabbit', 'rat', 'reindeer', 'rhinoceros', 'rooster', 'scorpion', 'seal', 'shark', 'sheep', 'shrimp', 'snail', 'snake', 'sparrow', 'spider', 'squid', 'squirrel', 'swallow', 'swan', 'tiger', 'toad', 'tortoise', 'turtle', 'vulture', 'walrus', 'weasel', 'whale', 'wolf', 'zebra');
@@ -12,9 +8,10 @@ var player = new Array();
 var categories = new Array();
 var playerTurn = 0;
 var status = 'initial';
+var guessedLetter = 'unvalid' //valid or unvalid
 var mode = 'group'; //group or individual
 var nPlayers = null;
-var remainingTotal = 10; 
+var remainingTotal = 10;
 var elements = {
     body: document.querySelector('body'),
     wrapper: document.getElementById('wrapper'),
@@ -22,35 +19,14 @@ var elements = {
 };
 
 var app = {
-    hide: (key) => {
-        let selectedElement = document.querySelector('.title');
-        selectedElement.classList.add('hide');
-
-        for (let i = 0; i < 4; i++) {
-            selectedElement = document.getElementById(1+i)
-            selectedElement.innerHTML = '';
-        }
-        
-       
-
-
-    },
-    createPlayer: (key) => {
-        for (let i = 0; i < key; i++) {
-            player[i] = new playerBuider(i);
-        }
-        build.divPlayer(key);
-        status = 'started';
-    },
-    setCategories: () => {
-        for (let i = 0; i < wordList.length; i++) {
-            categories[i] = wordList[i][0].toUpperCase();
-        }
-    },
+    
+    /* IX: A - GET A RANDON CATEGORY */
     setRandomCategory: () => {
         let n = Math.floor((Math.random() * wordList.length));
         return wordList[n][0].toUpperCase()
     },
+
+    /* IX: B - GET A RANDON WORD */
     setRandomWord: (category) => {
         let catArrayNo = categories.indexOf(category);
         let length = wordList[catArrayNo].length;
@@ -58,16 +34,8 @@ var app = {
         let word = wordList[catArrayNo][n].toUpperCase();
         return word;
     },
-    setRandomStart: (key) => {
-        for (let i = 0; i < key; i++) {
-            player[i].word.category = app.setRandomCategory();
-            player[i].word.selected = app.setRandomWord(player[i].word.category);
-            player[i].word.template = app.setTemplate(player[i].word.selected);
-            // app.populateTemplate(i);
-            console.log('Player ' + i + ':' + 'Category: ' + player[i].word.category + '; word: ' + player[i].word.selected);
-            // console.log(player[i].word.template);
-        }
-    },
+
+    /* IX: C - CREATE THE WORD TEMPLATE */
     setTemplate: (word) => {
         let j = 0;
         let arr = [];
@@ -77,13 +45,61 @@ var app = {
         }
         return arr
     },
+
+    /* XI - CHECK PLAYER TURN
+        Set the color for the player box
+    */
+    checkPlayerTurn() {
+        console.log(playerTurn + ' turn')   ; 
+        let n = player[playerTurn].elements.box;
+
+        // n.classList.
+        n.classList.remove('off');
+        // console.log(player[key].elements.box);
+    },
+
+    /* XII - CHECK USER INPUT
+        a. Validate if the input key is a letter
+        b. Check if the letter was guessed before
+        c. Update the template with right letters
+        d. Get the list of guessed letters
+    */
+    checkInput(key) {
+        // app.checkPlayerTurn();
+        if (app.validateInput(key) === true) {
+            if (app.addGuessList(key, playerTurn) === true) {
+                app.getTemplate(playerTurn);
+                app.getList(playerTurn);
+                
+                player[playerTurn].elements.box.classList.add('off');
+
+               
+                if (playerTurn === (nPlayers - 1)) {
+                    playerTurn = 0;
+                } else {
+                    playerTurn++;
+                    // console.log(playerTurn);
+                }
+          
+                player[playerTurn].elements.box.classList.remove('off');
+
+            } else {
+                console.log('This letter was guessed before')
+            }
+            // app.addGuessList(key, playerTurn);
+            // console.log(app.addGuessList(key, playerTurn));
+           
+           
+        };
+    },
+
     getTemplate: (playerNo) => {
         let arr = player[playerNo].word.template;
-        let template = ' '
+        let template = ''
         arr.forEach(element => {
             template += element;
         });
-
+        // console.log(template);
         player[playerNo].elements.template.innerHTML = template;
         return template
     },
@@ -102,7 +118,7 @@ var app = {
     },
     getSpecialChar: (key) => {
         let modifierKeys = ['CONTROL', 'SHIFT', 'ALTGRAPH', 'CAPSLOCK', 'FN', 'ALT', 'META'];
-        let specialKeys = ['ARROWUP', 'ARROWDOWN', 'ARROWLEFT', 'ARROWRIGHT', 'ENTER', ' ', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7'];
+        let specialKeys = ['ARROWUP', 'ARROWDOWN', 'ARROWwrong', 'ARROWRIGHT', 'ENTER', ' ', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7'];
         let functionalKeys = ['AUDIOVOLUMEUP', 'AudioVolumeDown', 'AudioVolumeUp', 'NumLock', 'ScrollLock', , 'Home', 'Backspace', 'End', 'Escape', 'Dead', 'PageUp', 'PageDown'];
 
         let x = (modifierKeys.indexOf(key));
@@ -120,19 +136,23 @@ var app = {
     addGuessList: (key, playerNo) => {
         let arr = player[playerNo].word.guessedList;
         let n = arr.indexOf(key);
-        // console.log(n);
+        // console.log('guess');
 
         if (n === -1) {
             // console.log('player' + playerNo + ':' + key + ' - true');
             arr.push(key);
+            guessedLetter = 'valid'
             app.checkGuess(key, playerNo);
+            
             return true;
         } else {
             // console.log('player' + playerNo + ':' + key + ' - false');
+            
+            guessedLetter = 'unvalid';
             return false;
         }
 
-        // player[playerNo].elements.list.innerHTML = arr;
+        // player[playerNo].elements.guessedList.innerHTML = arr;
         // console.log(player[playerNo].elements.list)
 
     },
@@ -169,7 +189,7 @@ var app = {
         // player[playerNo].score.guesses = player[playerNo].score.right + player[playerNo].score.wrong;
         // player[playerNo].elements.guesses.innerHTML = player[playerNo].score.guesses;
         app.updateGuesses(playerNo);
-        app.changeLife(playerNo,1);
+        app.changeLife(playerNo, 1);
     },
     addRight: (playerNo, p) => {
         player[playerNo].score.right += p;
@@ -182,10 +202,10 @@ var app = {
     },
     updateGuesses: (playerNo) => {
         player[playerNo].score.guesses = player[playerNo].score.right + player[playerNo].score.wrong;
-        player[playerNo].elements.guesses.innerHTML = player[playerNo].score.guesses;
+        // player[playerNo].elements.guesses.innerHTML = player[playerNo].score.guesses;
     },
     changeLife: (playerNo, p) => {
-        player[playerNo].score.remaining -= p;  //= player[playerNo].score.remaining + 1;
+        player[playerNo].score.remaining -= p; //= player[playerNo].score.remaining + 1;
         // let n = player[playerNo].score.remaining;
         // console.log('apos ' + n)
         player[playerNo].elements.remaining.innerHTML = player[playerNo].score.remaining;
@@ -196,155 +216,220 @@ var app = {
         if (player[playerNo].score.remaining === 0) {
             // let selectedElement = document.querySelectorAll('.box.p'+playerNo+'>.inner-wrapper');
             // selectedElement.innerHTML = "game over";
-            console.log('game-over')
+            player[playerNo].status = 'stop';
+            let box = player[playerNo].elements.box
+            box.classList.add('gameOver');
+            box.innerHTML = "<div class='gameOver'>Sorry, you lose!</div>";
+
         }
     },
+
+    
+    
+
+
+    
+
 
 }
 
 var build = {
-    //create the basic template for 4 players
-    background: () => {
+    // I. 1 - create the landing page with 4 player selectors
+    playerSelector: () => {
+
+        // create the title tile and append it to the main wrapper
+        let divTitle = document.createElement('div');
+        divTitle.classList.add('title');
+        divTitle.innerHTML = '<h1>Wo_d Gu_ss G_me</h1>' +
+            '<p>Select the number of players</p>';
+        elements.wrapper.append(divTitle)
+
+        // create 4 buttons for player selection
         for (let i = 0; i < 4; i++) {
             let newElement = document.createElement('button');
-            newElement.classList.add('boxP' + i);
+            newElement.classList.add('btnP' + i);
             newElement.id = (i + 1);
 
             let divWrapper = document.createElement('div');
-            divWrapper.classList.add('inner-wrapper','selector');
-            if ((i + 1)=== 1) {
+            divWrapper.classList.add('inner-wrapper', 'selector');
+            if ((i + 1) === 1) {
                 divWrapper.innerHTML = (i + 1) + ' Player'
             } else {
                 divWrapper.innerHTML = (i + 1) + ' Players'
             }
-             //+ (i===1)?' Player':;
             newElement.append(divWrapper);
-
-            
 
             elements.wrapper.append(newElement);
         }
     },
 
+    /* II - Get the user selection
+        check if the app status is its initial status
+        Each button id reflect the number of players (1 - 4)
+        call the next function when selecting a number of players
+    */
+    clickSelect() {
+        if (status === 'initial') {
+            n = this.id * 1;
+            // console.log((n) + typeof(n));
+            build.selectPlayers(n);
+            // selectPlayersKey(n);
+        }
+    },
+
+    /* III - Get the user selection by typing
+        if the entered key is a number from 1 - 4 AND the status = initial,
+        call the function selectPlayers
+        Else, check if user is trying to guess a letter.
+        */
+    typingSelect() {
+        var key = event.key.toUpperCase();
+        if (status === 'initial') {
+            if (key >= 1 && key <= 4) {
+                build.selectPlayers(key);
+            }
+        } else {
+            app.checkInput(key);
+        }
+    },
+
+    /* IV - HIDE THE LANDING PAGE AND BUILD ALL PLAYERS CONATINERS */
+     
+    selectPlayers(key) {
+        build.hide(key); 
+        build.divPlayer(key);
+        build.createPlayer(key);
+        build.setCategories();
+        build.setRandomStart(key);
+        build.blankTemplate(key);
+        nPlayers = key;
+        app.checkPlayerTurn();
+    },
+    
+    /* V - HIDE THE TITLE TILE AND REMOVE SELECTION BUTTONS*/
+    hide: (key) => {
+        let selectedElement = document.querySelector('.title');
+        selectedElement.classList.add('hide');
+
+        for (let i = 0; i < 4; i++) {
+            selectedElement = document.getElementById(1 + i)
+            selectedElement.remove();
+        }
+    },
+
+    /* VI - BUILD THE PAGE HTML */
     divPlayer: (key) => {
         for (let i = 0; i < key; i++) {
-            let div = document.getElementById('boxP' + i);
+            let newElement = document.createElement('div');
+            newElement.classList.add('boxP' + i,'off');
+            newElement.id = 'BoxP' + i;
 
+            let divAvatar = document.createElement('div');
+            divAvatar.classList.add('avatar');
+            divAvatar.id = 'avatar-P' + i;
+            divAvatar.innerHTML = 'avatar'
+            newElement.append(divAvatar);
 
+            let divRight = document.createElement('div');
+            divRight.classList.add('right');
+            divRight.id = 'right-P' + i;
+            divRight.innerHTML = "<div class='label'>Right<br>Guesses:</div>" +
+                "<div class='score' id='scoreRightP" + i + "'>0</div>"
+            newElement.append(divRight);
 
+            let divWrong = document.createElement('div');
+            divWrong.classList.add('wrong');
+            divWrong.id = 'wrong-P' + i;
+            divWrong.innerHTML = "<div class='label'>Wrong <br> Guesses:</div>" +
+                "<div class='score' id='scoreWrongP" + i + "'>0</div>"
+            newElement.append(divWrong);
 
+            let divRemaining = document.createElement('div');
+            divRemaining.classList.add('remaining');
+            divRemaining.id = 'remaining-P' + i;
+            divRemaining.innerHTML = "<div class='label'>Remaining <br> Guesses:</div>" +
+                "<div class='score' id='scoreRemainingP" + i + "'>0</div>"
+            newElement.append(divRemaining);
 
+            let divPoints = document.createElement('div');
+            divPoints.classList.add('points');
+            divPoints.id = 'points-P' + i;
+            divPoints.innerHTML = "<div class='label'>Total <br> Points:</div>" +
+                "<div class='score' id='scorePointsP" + i + "'>0</div>"
+            newElement.append(divPoints);
 
+            let divWins = document.createElement('div');
+            divWins.classList.add('wins');
+            divWins.id = 'wins-P' + i;
+            divWins.innerHTML = "<div class='label'>Matches <br> Wins:</div>" +
+                "<div class='score' id='scoreWinsP" + i + "'>0</div>"
+            newElement.append(divWins);
 
+            //Create the element displays the template of the selected word
+            let divTemplate = document.createElement('div');
+            divTemplate.classList.add('template');
+            divTemplate.id = 'template' + i;
+            newElement.append(divTemplate);
 
+            //Create the element displays the template of the selected word
+            let divList = document.createElement('div');
+            divList.classList.add('list');
+            divList.innerHTML = "<p>Guessed Letters:<br><span id='list" + i + "'></span></p>"
+            newElement.append(divList);
 
-
-
-            // let newElement = document.createElement('div');
-            // newElement.classList.add('box', 'p' + i);
-
-            // let divWrapper = document.createElement('div');
-            // divWrapper.classList.add('inner-wrapper');
-            // newElement.append(divWrapper);
-
-            // let divTop = document.createElement('div');
-            // divTop.classList.add('top-p' + i);
-            // divTop.innerHTML = (i + 1) + ' Player';
-
-            // divWrapper.append(divTop);
-
-            // //Create the element displays the template of the selected word
-            // let divMid1 = document.createElement('div');
-            // divMid1.classList.add('middle-p' + i, 'template');
-            // divWrapper.append(divMid1);
-
-            // //Create the element that shows the label for the list of guessed letters
-            // let guessedList = document.createElement('div');
-            // guessedList.classList.add('middle-p' + i);
-            // guessedList.innerHTML = 'Guessed Letters:'
-            // divWrapper.append(guessedList);
-
-            // //Create the element that shows list of guessed letters
-            // let guessedListSpan = document.createElement('span');
-            // guessedListSpan.classList.add('middle-p' + i, 'guessed-list');
-            // guessedListSpan.innerHTML = ''
-            // guessedList.append(guessedListSpan);
-
-            // //Create the element that shows the number of right guesses
-            // let divRight = document.createElement('div');
-            // divRight.classList.add('ScoreP' + i,'label');
-            // divRight.innerHTML = 'Right Guesses: ';
-            // divWrapper.append(divRight);
-
-            // let divRightSpan = document.createElement('span');
-            // divRightSpan.classList.add('ScoreP' + i, 'right');
-            // divRight.append(divRightSpan);
-
-            // //Create the element that shows the number of wrong guesses
-            // let divWrong = document.createElement('div');
-            // divWrong.classList.add('ScoreP' + i,'label');
-            // divWrong.innerHTML = 'Wrong Guesses: ';
-            // divWrapper.append(divWrong);
-
-            // let divWrongSpan = document.createElement('span');
-            // divWrongSpan.classList.add('ScoreP' + i, 'wrong');
-            // divWrong.append(divWrongSpan);
-
-            // //Create the element that shows the number of total guesses
-            // let divTotal = document.createElement('div');
-            // divTotal.classList.add('ScoreP' + i,'label');
-            // divTotal.innerHTML = 'Total Guesses: ';
-            // divWrapper.append(divTotal);
-
-            // let divTotalSpan = document.createElement('span');
-            // divTotalSpan.classList.add('ScoreP' + i, 'total');
-           
-            // divTotal.append(divTotalSpan);
-
-            // //Create the element that shows the number of remaining guesses
-            // let divRemaining = document.createElement('div');
-            // divRemaining.classList.add('ScoreP' + i,'label');
-            // divRemaining.innerHTML = 'Remaining Guesses: ';
-            // divWrapper.append(divRemaining);
-
-            // let divRemainingSpan = document.createElement('span');
-            // divRemainingSpan.classList.add('ScoreP' + i, 'remaining');
-            // // divRemainingSpan.innerHTML = p;
-            // divRemaining.append(divRemainingSpan);
-
-            // let divBottom = document.createElement('div');
-            // divBottom.classList.add('bottom-p' + i);
-
-            // divWrapper.append(divBottom);
-
-            // elements.wrapper.append(newElement);
+            elements.wrapper.append(newElement);
         }
     },
 
-
-    divTitle: () => {
-        let newElement = document.createElement('div');
-        newElement.classList.add('title');
-        newElement.innerHTML = '<h1>Wo_d Gu_ss G_me</h1>' +
-            '<p>Select the number of players</p>';
-
-        elements.wrapper.append(newElement)
+    /* VII - CREATE PLAYER USING THE PLAYERS CONSTRUCTOR  AND CHANGE THE 
+    STATUS TO STARTED */
+    createPlayer: (key) => {
+        for (let i = 0; i < key; i++) {
+            player[i] = new playerBuilder(i);
+        }
+        status = 'started';
     },
+
+    /* VIII - GET THE FIRST ITEM FOR EACH ARRAY TO CREATE THE CATEGORIES ARRAY*/
+    setCategories: () => {
+        for (let i = 0; i < wordList.length; i++) {
+            categories[i] = wordList[i][0].toUpperCase();
+        }
+    },
+    
+    /* IX - SELECT A RANDOM WORD FOR EACH PLAYER */
+    setRandomStart: (key) => {
+        for (let i = 0; i < key; i++) {
+            player[i].word.category = app.setRandomCategory();
+            player[i].word.selected = app.setRandomWord(player[i].word.category);
+            player[i].word.template = app.setTemplate(player[i].word.selected);
+      
+            console.log('Player ' + i + ':' + 'Category: ' + player[i].word.category + '; word: ' + player[i].word.selected);
+        }
+    },
+
+    /* X - POPULATE THE SCREEN WITH THE WORD TEMPLATE _ _ _ */
     blankTemplate: (key) => {
         for (let i = 0; i < key; i++) {
-            let selectedElement = document.querySelector('.middle-p' + i);
-            // console.log(document.querySelector('.middle-p' + i))
-            selectedElement.innerHTML = app.getTemplate(i)
+            document.getElementById('template'+i).textContent = app.getTemplate(i);
         }
-    }
+    },
+
+    
+
 
 
 
 
 }
 
-function playerBuider(n) {
+/*********************************
+ *          CONSTRUCTOR
+ **********************************/
+
+function playerBuilder(n) {
     this.name = 'Player ' + n;
+    this.status = 'playing';
     this.word = {
         selected: null,
         category: null,
@@ -361,83 +446,37 @@ function playerBuider(n) {
 
     }
     this.elements = {
-        wrong: document.querySelector('.ScoreP' + n + '.wrong'),
-        right: document.querySelector('.ScoreP' + n + '.right'),
-        guesses: document.querySelector('.ScoreP' + n + '.total'),
-        guessedList: document.querySelector('.middle-p' + n + '.guessed-list'),
-        remaining: document.querySelector('.ScoreP' + n + '.remaining'),
-        points: null,
-        template: document.querySelector('.middle-p' + n + '.template'),
+        wrong: document.getElementById('scoreWrongP' + n),
+        right: document.getElementById('scoreRightP' + n),
+        wins: document.getElementById('scoreWinsP' + n),
+        guessedList: document.getElementById('list' + n),
+        remaining: document.getElementById('scoreRemainingP' + n),
+        points: document.getElementById('scorePointsP' + n),
+        template: document.getElementById('template' + n),
+        box: document.getElementById('BoxP'+n)
     }
 
 }
 
-function clickSelect() {
-    n = this.id * 1;
-    // console.log((n) + typeof(n));
-    selectPlayers(n);
-    // selectPlayersKey(n);
-}
-
-function typingSelect() {
-    var key = event.key.toUpperCase();
-    if (status === 'initial') {
-        if (key >= 1 && key <= 4) {
-            selectPlayers(key);
-            
-        }
-    } else {
-        if (app.validateInput(key) === true) {
-
-            console.log('other');
-        };
-    }
-}
-
-
-function selectPlayers(key) {
-            console.log('player '+key);
-            app.hide(key);
-            app.createPlayer(key);
-            // app.setCategories();
-            // app.setRandomStart(key);
-            // build.blankTemplate(key);
-            // nPlayers = key;
-
-            // console.log(status);
-        // }
-    // } else {
-    //     if (app.validateInput(key) === true) {
-    //         // app.addGuessList(key, playerTurn);
-    //         // app.getTemplate(playerTurn);
-    //         // app.getList(playerTurn);
-    //         if (playerTurn === (nPlayers - 1)) {
-    //             playerTurn = 0;
-    //         } else {
-    //             playerTurn++;
-    //         }
-    //     };
-    // }
-}
-
+/************************************************************************************* */
 
 
 // Listerners
-// var elements.keyPressed = document.querySelector('body');
-// const initial = document.getElementById('initial');
-// const player1 = 
 
+/**************************************
+ *  I - BUILD THE LANDING PAGE 
+ * ************************************/
 
-build.background();
+ build.playerSelector();
 // build.divPlayer(4);
-build.divTitle();
 
-document.getElementById('1').addEventListener('click', clickSelect);
-document.getElementById('2').addEventListener('click', clickSelect);
-document.getElementById('3').addEventListener('click', clickSelect);
-document.getElementById('4').addEventListener('click', clickSelect);
+/*  II - GET THE USER SELECTION ABOUT THE NUMBER OF PLAYERS  */ 
+document.getElementById('1').addEventListener('click', build.clickSelect);
+document.getElementById('2').addEventListener('click', build.clickSelect);
+document.getElementById('3').addEventListener('click', build.clickSelect);
+document.getElementById('4').addEventListener('click', build.clickSelect);
 
 
-
-elements.body.addEventListener('keyup', typingSelect, false); 
-
+/* III - GET THE USER INPUT TO SELECT THE NUMBER OF PLAYERS
+    OR TO GUESS A LETTER */
+elements.body.addEventListener('keyup', build.typingSelect, false);
