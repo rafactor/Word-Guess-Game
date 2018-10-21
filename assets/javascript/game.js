@@ -5,13 +5,14 @@ wordList[1] = new Array('body', 'ankle', 'arm', 'back', 'beard', 'blood', 'body'
 wordList[2] = new Array('cosmetics', 'aftershave', 'body lotion', 'cream', 'deodorant', 'eyeliner', 'foundation', 'fragrance', 'lipstick', 'makeup', 'mask', 'perfume', 'shampoo', 'soap');
 
 var player = new Array();
+var activePlayers = [];
 var categories = new Array();
 var playerTurn = 0;
 var status = 'initial';
 var guessedLetter = 'unvalid' //valid or unvalid
 var mode = 'group'; //group or individual
 var nPlayers = null;
-var remainingTotal = 10;
+var remainingTotal = 3;
 var elements = {
     body: document.querySelector('body'),
     wrapper: document.getElementById('wrapper'),
@@ -19,7 +20,7 @@ var elements = {
 };
 
 var app = {
-    
+
     /* IX: A - GET A RANDON CATEGORY */
     setRandomCategory: () => {
         let n = Math.floor((Math.random() * wordList.length));
@@ -46,16 +47,37 @@ var app = {
         return arr
     },
 
-    /* XI - CHECK PLAYER TURN
-        Set the color for the player box
-    */
+    /* XI - CHECK PLAYER TURN */
     checkPlayerTurn() {
-        console.log(playerTurn + ' turn')   ; 
-        let n = player[playerTurn].elements.box;
+        console.log('Player Turn:' + playerTurn)
+        let p = activePlayers.indexOf(playerTurn)
 
-        // n.classList.
-        n.classList.remove('off');
-        // console.log(player[key].elements.box);
+        if (p===-1) {
+            
+            console.log(activePlayers)
+            console.log('not found')
+        } else {
+            console.log('found');
+            player[playerTurn].elements.box.classList.remove('off');
+            // 
+        }
+
+    },        
+
+    nextPlayer() {
+        let result;
+        console.log('next');
+        player[playerTurn].elements.box.classList.add('off');
+        if (playerTurn === activePlayers[activePlayers.length -1 ]) {
+            result = activePlayers[0]
+        } else {
+            let n = activePlayers.indexOf(playerTurn);
+            result = activePlayers[n + 1];
+        }
+        player[result].elements.box.classList.remove('off');
+
+
+        return result;
     },
 
     /* XII - CHECK USER INPUT
@@ -70,26 +92,18 @@ var app = {
             if (app.addGuessList(key, playerTurn) === true) {
                 app.getTemplate(playerTurn);
                 app.getList(playerTurn);
-                
-                player[playerTurn].elements.box.classList.add('off');
 
-               
-                if (playerTurn === (nPlayers - 1)) {
-                    playerTurn = 0;
-                } else {
-                    playerTurn++;
-                    // console.log(playerTurn);
-                }
-          
-                player[playerTurn].elements.box.classList.remove('off');
+                
+                playerTurn = app.nextPlayer();
+
+              
 
             } else {
                 console.log('This letter was guessed before')
             }
             // app.addGuessList(key, playerTurn);
             // console.log(app.addGuessList(key, playerTurn));
-           
-           
+
         };
     },
 
@@ -143,11 +157,11 @@ var app = {
             arr.push(key);
             guessedLetter = 'valid'
             app.checkGuess(key, playerNo);
-            
+
             return true;
         } else {
             // console.log('player' + playerNo + ':' + key + ' - false');
-            
+
             guessedLetter = 'unvalid';
             return false;
         }
@@ -176,18 +190,11 @@ var app = {
             app.addWrong(playerNo, 1);
             return false;
         }
-
-
-
-        // console.log(player[playerNo].word.template)
     },
     addWrong: (playerNo, p) => {
         player[playerNo].score.wrong += p;
         player[playerNo].elements.wrong.innerHTML = player[playerNo].score.wrong;
 
-        // addTotal(playerNo);
-        // player[playerNo].score.guesses = player[playerNo].score.right + player[playerNo].score.wrong;
-        // player[playerNo].elements.guesses.innerHTML = player[playerNo].score.guesses;
         app.updateGuesses(playerNo);
         app.changeLife(playerNo, 1);
     },
@@ -196,41 +203,27 @@ var app = {
         player[playerNo].elements.right.innerHTML = player[playerNo].score.right;
 
         app.updateGuesses(playerNo);
-        // // addTotal(playerNo);
-        // player[playerNo].score.guesses = player[playerNo].score.right + player[playerNo].score.wrong;
-        // player[playerNo].elements.guesses.innerHTML = player[playerNo].score.guesses;
     },
     updateGuesses: (playerNo) => {
         player[playerNo].score.guesses = player[playerNo].score.right + player[playerNo].score.wrong;
-        // player[playerNo].elements.guesses.innerHTML = player[playerNo].score.guesses;
     },
     changeLife: (playerNo, p) => {
-        player[playerNo].score.remaining -= p; //= player[playerNo].score.remaining + 1;
-        // let n = player[playerNo].score.remaining;
-        // console.log('apos ' + n)
+        player[playerNo].score.remaining -= p; 
         player[playerNo].elements.remaining.innerHTML = player[playerNo].score.remaining;
 
         app.getGameOver(playerNo);
     },
     getGameOver: (playerNo) => {
+        console.log('gameover');
+        console.log('playerNo:' + playerNo)
+        console.log(playerTurn);
         if (player[playerNo].score.remaining === 0) {
-            // let selectedElement = document.querySelectorAll('.box.p'+playerNo+'>.inner-wrapper');
-            // selectedElement.innerHTML = "game over";
             player[playerNo].status = 'stop';
             let box = player[playerNo].elements.box
             box.classList.add('gameOver');
             box.innerHTML = "<div class='gameOver'>Sorry, you lose!</div>";
-
         }
     },
-
-    
-    
-
-
-    
-
-
 }
 
 var build = {
@@ -294,18 +287,17 @@ var build = {
     },
 
     /* IV - HIDE THE LANDING PAGE AND BUILD ALL PLAYERS CONATINERS */
-     
+
     selectPlayers(key) {
-        build.hide(key); 
+        build.hide(key);
         build.divPlayer(key);
         build.createPlayer(key);
         build.setCategories();
         build.setRandomStart(key);
         build.blankTemplate(key);
-        nPlayers = key;
         app.checkPlayerTurn();
     },
-    
+
     /* V - HIDE THE TITLE TILE AND REMOVE SELECTION BUTTONS*/
     hide: (key) => {
         let selectedElement = document.querySelector('.title');
@@ -320,8 +312,13 @@ var build = {
     /* VI - BUILD THE PAGE HTML */
     divPlayer: (key) => {
         for (let i = 0; i < key; i++) {
+
+            // add players numbers into the active player list
+            activePlayers[i] = i;
+        
+
             let newElement = document.createElement('div');
-            newElement.classList.add('boxP' + i,'off');
+            newElement.classList.add('boxP' + i, 'off');
             newElement.id = 'BoxP' + i;
 
             let divAvatar = document.createElement('div');
@@ -396,14 +393,14 @@ var build = {
             categories[i] = wordList[i][0].toUpperCase();
         }
     },
-    
+
     /* IX - SELECT A RANDOM WORD FOR EACH PLAYER */
     setRandomStart: (key) => {
         for (let i = 0; i < key; i++) {
             player[i].word.category = app.setRandomCategory();
             player[i].word.selected = app.setRandomWord(player[i].word.category);
             player[i].word.template = app.setTemplate(player[i].word.selected);
-      
+
             console.log('Player ' + i + ':' + 'Category: ' + player[i].word.category + '; word: ' + player[i].word.selected);
         }
     },
@@ -411,11 +408,11 @@ var build = {
     /* X - POPULATE THE SCREEN WITH THE WORD TEMPLATE _ _ _ */
     blankTemplate: (key) => {
         for (let i = 0; i < key; i++) {
-            document.getElementById('template'+i).textContent = app.getTemplate(i);
+            document.getElementById('template' + i).textContent = app.getTemplate(i);
         }
     },
 
-    
+
 
 
 
@@ -441,7 +438,7 @@ function playerBuilder(n) {
         wrong: 0,
         right: 0,
         guesses: 0,
-        remaining: 10,
+        remaining: remainingTotal,
         points: 0,
 
     }
@@ -453,7 +450,7 @@ function playerBuilder(n) {
         remaining: document.getElementById('scoreRemainingP' + n),
         points: document.getElementById('scorePointsP' + n),
         template: document.getElementById('template' + n),
-        box: document.getElementById('BoxP'+n)
+        box: document.getElementById('BoxP' + n)
     }
 
 }
@@ -467,10 +464,10 @@ function playerBuilder(n) {
  *  I - BUILD THE LANDING PAGE 
  * ************************************/
 
- build.playerSelector();
+build.playerSelector();
 // build.divPlayer(4);
 
-/*  II - GET THE USER SELECTION ABOUT THE NUMBER OF PLAYERS  */ 
+/*  II - GET THE USER SELECTION ABOUT THE NUMBER OF PLAYERS  */
 document.getElementById('1').addEventListener('click', build.clickSelect);
 document.getElementById('2').addEventListener('click', build.clickSelect);
 document.getElementById('3').addEventListener('click', build.clickSelect);

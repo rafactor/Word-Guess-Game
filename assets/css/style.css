@@ -91,10 +91,13 @@ body {
     background-color: grey;
 }
 .gameOver {
+    grid-column: col 1 / span 5;
+    grid-row: row 1 / span 5;
     background-color: black;
     align-content: center;
     text-align: center;
-
+    justify-content: center;
+    font-size: 2rem;
 }
 
 /************************************
