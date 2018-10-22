@@ -381,42 +381,42 @@ if (status === 'winner') {
             let divAvatar = document.createElement('div');
             divAvatar.classList.add('avatar');
             divAvatar.id = 'avatar-P' + i;
-            divAvatar.innerHTML = 'avatar'
+            divAvatar.innerHTML = 'Player' + <br> + i;
             newElement.append(divAvatar);
 
             let divRight = document.createElement('div');
             divRight.classList.add('right');
             divRight.id = 'right-P' + i;
             divRight.innerHTML = "<div class='label'>Right<br>Guesses:</div>" +
-                "<div class='score' id='scoreRightP" + i + "'>0</div>"
+                "<div class='score' id='scoreRightP" + i + "'></div>"
             newElement.append(divRight);
 
             let divWrong = document.createElement('div');
             divWrong.classList.add('wrong');
             divWrong.id = 'wrong-P' + i;
             divWrong.innerHTML = "<div class='label'>Wrong <br> Guesses:</div>" +
-                "<div class='score' id='scoreWrongP" + i + "'>0</div>"
+                "<div class='score' id='scoreWrongP" + i + "'></div>"
             newElement.append(divWrong);
 
             let divRemaining = document.createElement('div');
             divRemaining.classList.add('remaining');
             divRemaining.id = 'remaining-P' + i;
             divRemaining.innerHTML = "<div class='label'>Remaining <br> Guesses:</div>" +
-                "<div class='score' id='scoreRemainingP" + i + "'>0</div>"
+                "<div class='score' id='scoreRemainingP" + i + "'></div>"
             newElement.append(divRemaining);
 
             let divPoints = document.createElement('div');
             divPoints.classList.add('points');
             divPoints.id = 'points-P' + i;
             divPoints.innerHTML = "<div class='label'>Total <br> Points:</div>" +
-                "<div class='score' id='scorePointsP" + i + "'>0</div>"
+                "<div class='score' id='scorePointsP" + i + "'></div>"
             newElement.append(divPoints);
 
             let divWins = document.createElement('div');
             divWins.classList.add('wins');
             divWins.id = 'wins-P' + i;
             divWins.innerHTML = "<div class='label'>Matches <br> Wins:</div>" +
-                "<div class='score' id='scoreWinsP" + i + "'>0</div>"
+                "<div class='score' id='scoreWinsP" + i + "'></div>"
             newElement.append(divWins);
 
             //Create the element displays the template of the selected word
@@ -432,6 +432,8 @@ if (status === 'winner') {
             newElement.append(divList);
 
             elements.wrapper.append(newElement);
+
+
         }
     },
 
@@ -468,6 +470,14 @@ if (status === 'winner') {
     blankTemplate: (key) => {
         for (let i = 0; i < key; i++) {
             document.getElementById('template' + i).textContent = app.getTemplate(i);
+            player[i].elements.right.textContent = player[i].score.right;
+            player[i].elements.wrong.textContent = player[i].score.wrong;
+            player[i].elements.remaining.textContent = player[i].score.remaining;
+            player[i].elements.wins.textContent = player[i].score.wins;
+            player[i].elements.points.textContent = player[i].score.points;
+
+
+
         }
     },
     playItAgain() {
