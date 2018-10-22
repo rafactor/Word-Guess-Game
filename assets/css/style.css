@@ -19,14 +19,16 @@ body {
     border-right: 1px white solid;
 }
 
-.title {
-    /* font-family: 'Bungee Shade', cursive; */
-    font-size: 3rem;
+.title>h1 {
+    font-family: 'Bungee Shade', cursive;
+    font-size: 5vw;
     padding-top: 1rem;
+    justify-content: center;
     /* width: auto; */
 }
 
 .title>p {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     color: black;
     font-size: 1.6rem;
 }
@@ -37,6 +39,10 @@ body {
 
 .template {
     letter-spacing: 10px;
+}
+
+.btnP0, .btnP1, .btnP2, .btnP3 {
+    color: white;
 }
 .boxP0, .boxP1, .boxP2 ,.boxP3 {
     color: #fff;
@@ -194,11 +200,19 @@ Layer Position inside the player container
 .avatar {
     height: 100px;
     width: 100px;
-    background-color: gray;
+    /* background-color: gray; */
     border-bottom-right-radius: 50px;
+    border-right: 2px white solid;
+    border-bottom: 2px white solid;
+
+    text-align: center;
+    font-size: 1rem;
     
 }
 
+.avatar > p > span {
+    font-size: 2.5rem;
+}
 .right {
     grid-row: row 5;
     grid-column: col;
@@ -250,4 +264,16 @@ Layer Position inside the player container
     font-size: 3rem;
     font-weight: bold;
     text-decoration: chartreuse; 
+}
+
+@media screen and (max-width:650px) {
+    .label {
+        font-size: 0.5rem; 
+    }
+    .title>p {
+        font-size: 0.8rem;
+    }
+    .title>h1 {
+        font-size: 6vw;
+    }
 }

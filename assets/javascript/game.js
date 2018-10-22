@@ -381,7 +381,7 @@ if (status === 'winner') {
             let divAvatar = document.createElement('div');
             divAvatar.classList.add('avatar');
             divAvatar.id = 'avatar-P' + i;
-            divAvatar.innerHTML = 'Player' + <br> + i;
+            divAvatar.innerHTML = "<p>Player<br><span>" + (i + 1)+ "</span></p>";
             newElement.append(divAvatar);
 
             let divRight = document.createElement('div');
