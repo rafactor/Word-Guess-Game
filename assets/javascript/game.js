@@ -12,7 +12,7 @@ var status = 'initial';
 var guessedLetter = 'unvalid' //valid or unvalid
 var mode = 'group'; //group or individual
 var nPlayers = null;
-var remainingTotal = 3;
+var remainingTotal = 10;
 var elements = {
     body: document.querySelector('body'),
     wrapper: document.getElementById('wrapper'),
@@ -52,23 +52,23 @@ var app = {
         console.log('Player Turn:' + playerTurn)
         let p = activePlayers.indexOf(playerTurn)
 
-        if (p===-1) {
-            
+        if (p === -1) {
+
             console.log(activePlayers)
             console.log('not found')
         } else {
-            console.log('found');
+            console.log('found ' + player[playerTurn].elements.box);
             player[playerTurn].elements.box.classList.remove('off');
             // 
         }
 
-    },        
+    },
 
     nextPlayer() {
         let result;
-        console.log('next');
+        // console.log('next');
         player[playerTurn].elements.box.classList.add('off');
-        if (playerTurn === activePlayers[activePlayers.length -1 ]) {
+        if (playerTurn === activePlayers[activePlayers.length - 1]) {
             result = activePlayers[0]
         } else {
             let n = activePlayers.indexOf(playerTurn);
@@ -88,15 +88,15 @@ var app = {
     */
     checkInput(key) {
         // app.checkPlayerTurn();
+        // console.log(key);
         if (app.validateInput(key) === true) {
             if (app.addGuessList(key, playerTurn) === true) {
                 app.getTemplate(playerTurn);
                 app.getList(playerTurn);
 
-                
+                if (status != 'winner') {
                 playerTurn = app.nextPlayer();
-
-              
+                } 
 
             } else {
                 console.log('This letter was guessed before')
@@ -104,7 +104,15 @@ var app = {
             // app.addGuessList(key, playerTurn);
             // console.log(app.addGuessList(key, playerTurn));
 
+        } else if (status === 'gameOver' && key === ' ') {
+            let element = document.querySelector('.finalScreen');
+            element.parentNode.removeChild(element);
+
+            build.playItAgain();
+        } else if (status === 'winner') {
+            build.playItAgain();
         };
+
     },
 
     getTemplate: (playerNo) => {
@@ -185,6 +193,7 @@ var app = {
 
         if (count > 0) {
             app.addRight(playerNo, 1)
+            app.checkWin(playerNo);
             return true;
         } else {
             app.addWrong(playerNo, 1);
@@ -204,24 +213,59 @@ var app = {
 
         app.updateGuesses(playerNo);
     },
+    checkWin: (playerNo) => {
+        let template = player[playerNo].word.template
+        let n = template.indexOf('_');
+        if (n === -1) {
+            console.log('winner');
+            status = 'winner';
+
+            let win = document.createElement('div');
+            win.classList.add('winner');
+            win.textContent = 'You win!'
+
+            let box = player[playerNo].elements.box
+            box.append(win);
+
+            player[playerNo].score.wins += 1;
+
+            // let wins = player[playerNo].elements.wins;
+            player[playerNo].elements.wins.textContent = player[playerNo].score.wins;
+
+        }
+    },
     updateGuesses: (playerNo) => {
         player[playerNo].score.guesses = player[playerNo].score.right + player[playerNo].score.wrong;
     },
     changeLife: (playerNo, p) => {
-        player[playerNo].score.remaining -= p; 
+        player[playerNo].score.remaining -= p;
         player[playerNo].elements.remaining.innerHTML = player[playerNo].score.remaining;
 
         app.getGameOver(playerNo);
     },
     getGameOver: (playerNo) => {
-        console.log('gameover');
-        console.log('playerNo:' + playerNo)
-        console.log(playerTurn);
+
         if (player[playerNo].score.remaining === 0) {
-            player[playerNo].status = 'stop';
+            console.log('gameover playerNo:' + playerNo)
+            // player[playerNo].status = 'stop';
             let box = player[playerNo].elements.box
-            box.classList.add('gameOver');
-            box.innerHTML = "<div class='gameOver'>Sorry, you lose!</div>";
+            box.classList.add('black');
+            box.innerHTML = "<div class='endGame'> ¯\\_(ツ)_/¯ <br> you lose!</div>";
+
+            if (activePlayers.length > 1) {
+
+                let position = activePlayers.indexOf(playerNo)
+                activePlayers.splice(position, 1);
+            } else {
+                console.log('noWinner');
+                let gameOver = document.createElement('div');
+                gameOver.classList.add('finalScreen');
+                gameOver.innerHTML = "<div class='end'><span class='emoji'> = / </span><p class='noWinner'>No winner this time.</p><span class='space'>Press space to play it again</span></div>"
+                elements.wrapper.append(gameOver);
+                status = 'gameOver';
+
+            }
+
         }
     },
 }
@@ -276,14 +320,24 @@ var build = {
         Else, check if user is trying to guess a letter.
         */
     typingSelect() {
+
+if (status === 'winner') {
+    build.playItAgain(nPlayers);
+} else {
+
         var key = event.key.toUpperCase();
         if (status === 'initial') {
             if (key >= 1 && key <= 4) {
                 build.selectPlayers(key);
             }
+            // } else if (status = 'gameOver') {
+            //     console.log(key);
+            //     build.playItAgain();
+
         } else {
             app.checkInput(key);
         }
+    }
     },
 
     /* IV - HIDE THE LANDING PAGE AND BUILD ALL PLAYERS CONATINERS */
@@ -311,11 +365,14 @@ var build = {
 
     /* VI - BUILD THE PAGE HTML */
     divPlayer: (key) => {
+        nPlayers = key;
+        initial = 'initial';
+
         for (let i = 0; i < key; i++) {
 
             // add players numbers into the active player list
             activePlayers[i] = i;
-        
+
 
             let newElement = document.createElement('div');
             newElement.classList.add('boxP' + i, 'off');
@@ -401,6 +458,8 @@ var build = {
             player[i].word.selected = app.setRandomWord(player[i].word.category);
             player[i].word.template = app.setTemplate(player[i].word.selected);
 
+            // status = 'started'
+
             console.log('Player ' + i + ':' + 'Category: ' + player[i].word.category + '; word: ' + player[i].word.selected);
         }
     },
@@ -411,6 +470,53 @@ var build = {
             document.getElementById('template' + i).textContent = app.getTemplate(i);
         }
     },
+    playItAgain() {
+        // console.log('again')
+        // let element = document.querySelector('.finalScreen');
+        // element.parentNode.removeChild(element);
+
+        status = 'started';
+
+        for (let i = 0; i < nPlayers; i++) {
+            player[i].word.selected = null;
+            player[i].word.category = null;
+            player[i].word.template = new Array();
+            player[i].word.guessedList = new Array();
+            player[i].score.wrong = 0;
+            player[i].score.right = 0;
+            player[i].score.guesses = 0;
+            player[i].score.remaining = remainingTotal;
+            player[i].score.points = 0;
+
+            let box = player[i].elements.box;
+            box.parentNode.removeChild(box);
+
+
+
+            console.log('delete player' + i);
+
+        }
+
+        build.divPlayer(nPlayers);
+
+        for (let i = 0; i < nPlayers; i++) {
+            player[i].elements.wrong = document.getElementById('scoreWrongP' + i);
+            player[i].elements.right = document.getElementById('scoreRightP' + i);
+            player[i].elements.wins = document.getElementById('scoreWinsP' + i);
+            player[i].elements.guessedList = document.getElementById('list' + i);
+            player[i].elements.remaining = document.getElementById('scoreRemainingP' + i);
+            player[i].elements.points = document.getElementById('scorePointsP' + i);
+            player[i].elements.template = document.getElementById('template' + i);
+            player[i].elements.box = document.getElementById('BoxP' + i);
+        }
+        // build.createPlayer(nPlayers);
+        build.setCategories();
+        build.setRandomStart(nPlayers);
+        build.blankTemplate(nPlayers);
+        playerTurn = 0;
+        app.checkPlayerTurn();
+    }
+
 
 
 
@@ -426,11 +532,11 @@ var build = {
 
 function playerBuilder(n) {
     this.name = 'Player ' + n;
-    this.status = 'playing';
+    // this.status = 'playing';
     this.word = {
         selected: null,
         category: null,
-        length: null,
+        // length: null,
         template: new Array(),
         guessedList: new Array(),
     }
@@ -438,6 +544,7 @@ function playerBuilder(n) {
         wrong: 0,
         right: 0,
         guesses: 0,
+        wins: 0,
         remaining: remainingTotal,
         points: 0,
 

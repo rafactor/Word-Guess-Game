@@ -79,6 +79,53 @@ body {
     background-color: orange
 }
 
+.finalScreen {
+    display: grid;
+    grid-column: col 1 / span 10;
+    grid-row: row 1 /span 10;
+    background-color:#3F51B5;
+    width: 90%;
+    height: 90%;
+    margin: 5%;
+
+    z-index: 30;
+
+    align-items: center;
+    align-self: center;
+}
+
+.end{
+    /* align-self: center; */
+    text-align: center;
+    /* justify-content: center;
+    align-content: center;
+    justify-items: center;
+    justify-self: center;
+    height: 100%;
+    margin-top: 30%; */
+    justify-content: center;
+    align-items: center;
+
+
+}
+
+.emoji {
+    font-size: 5rem;
+    color: yellow;
+    margin-top: 40%;
+}
+
+.noWinner {
+    color: black;
+    align-self: center;
+    text-align: center;
+    justify-content: center;
+    align-content: center;
+}
+
+.space{
+    color: white;
+}
 .title {
     grid-column: col 3 / span 6;
     grid-row: row 5 / span 2 ;
@@ -90,15 +137,30 @@ body {
 .off {
     background-color: grey;
 }
-.gameOver {
-    grid-column: col 1 / span 5;
-    grid-row: row 1 / span 5;
-    background-color: black;
+
+.black {
+    /* grid-column: col 3;
+    grid-row: row 3; */
     align-content: center;
+    background-color: black;
+    align-self: center;
     text-align: center;
     justify-content: center;
     font-size: 2rem;
+    width: 100%;
+    height: 100%;
 }
+
+.endGame{
+    grid-column: col 1 / span 5;
+    grid-row: row 3;
+    align-self: center;
+    text-align: center;
+    justify-content: center;
+    align-content: center;
+}
+
+
 
 /************************************
  BACKGROUND & LAYOUT
@@ -181,4 +243,11 @@ Layer Position inside the player container
     grid-row: row 3;
     grid-column: col 1 / span 5;
     font-size: 2rem;
+}
+.winner{
+    grid-column: col 2 / span 3;
+    grid-row: row 2;
+    font-size: 3rem;
+    font-weight: bold;
+    text-decoration: chartreuse; 
 }
